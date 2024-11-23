@@ -4,7 +4,16 @@ class Chatbot:
     def __init__(self):
         # Dictionary-based responses
         self.responses = {
-            "hello": "Hi there! How can I assist you today?",
+            "Hello!": "Please Pick From any of these Terms below to see what they are all about:",
+            "Prelims" : {
+                "description": "Here are the Available Topics in the Preliminary Term",
+                "topics": {
+                    "Syntax": "Syntax refers to the rules that define the structure of a programming language.",
+                    "Variables": "Variables are containers for storing data values.",
+                    "Data Types": "Data types specify the type of data a variable can hold (e.g., int, float, string)."
+                }
+                
+            },
             "help": "I can help you with programming, topics on technology, or general questions.",
             "programming": "I can guide you on Python, JavaScript, or other programming topics. Which one would you like to discuss?",
             "python": "Python is a powerful programming language great for beginners and experts alike. Would you like to learn about data types, loops, or libraries?",
