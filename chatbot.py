@@ -5,64 +5,200 @@ from rapidfuzz import process
 class Chatbot:
     def __init__(self):
         self.responses = {
-            "hello": "Hi there! How can I assist you today?",
+            "hello": {
+                "description": (
+                    "Hi there! These are the available terms you can browse through:\n"
+                    "- Prelims\n"
+                    "- Midterms\n"
+                    "- Semi-Finals Term\n"
+                    "- Finals\n"
+                    "Type 'exit' to exit the program or 'main menu' to return to this menu!"
+                )
+            },
             "prelims": {
                 "description": "Here are the available topics in the Preliminary Term:",
                 "topics": {
-                    "syntax": "Syntax refers to the rules that define the structure of a programming language.",
-                    "variables": "Variables are containers for storing data values.",
-                    "data types": "Data types specify the type of data a variable can hold (e.g., int, float, string).",
+                    "syntax": {
+                        "description": (
+                            "Syntax refers to the rules that define the structure of a programming language.\n"
+                            "Type 'syntax example' to see examples or 'main menu' to return to the main menu."
+                        ),
+                        "example": (
+                            "Examples of syntax:\n"
+                            "- input(): Requests for user input\n"
+                            "- len(): Returns the length of an object\n"
+                            "- min(), max(): Returns the minimum or maximum values\n"
+                            "- round(): Rounds off numbers\n"
+                            "- type(): Returns the variable type\n"
+                            "Type 'exit' to exit the program or 'main menu' to return to this menu!"
+                        ),
+                    },
+                    "variables": {
+                        "description": (
+                            "Variables are containers for storing data values.\n"
+                            "Type 'variables example' to see examples or 'main menu' to return to the main menu."
+                        ),
+                        "example": (
+                            "Example of variables:\n"
+                            "x = 10\n"
+                            "y = 'Hello'\n"
+                            "print(x)\n"
+                            "print(y)\n"
+                            "Output:\n10\nHello"
+                            "Type 'exit' to exit the program or 'main menu' to return to this menu!"
+                        ),
+                    },
                 },
             },
-            "help": "I can help you with programming, topics on technology, or general questions. Type 'exit' to quit.",
+            "midterms": {
+                "description": "Here are the available topics in the Midterms:",
+                "topics": {
+                    "if else statement": {
+                        "description": (
+                            "The if-else statement is a decision-making statement that executes code based on specified conditions.\n"
+                            "Type 'if else statement example' to see examples or 'main menu' to return to the main menu."
+                        ),
+                        "example": (
+                            "Example of if-else statement:\n"
+                            "x = 10\n"
+                            "y = 20\n"
+                            "if y > x:\n"
+                            "    print('y is greater than x')\n"
+                            "else:\n"
+                            "    print('x is greater than y')\n"
+                            "Output:\ny is greater than x"
+                            "Type 'exit' to exit the program or 'main menu' to return to this menu!"
+                        ),
+                    },
+                    "nested decision": {
+                        "description": (
+                            "Python's nested if-else statements allow you to test multiple conditions.\n"
+                            "Type 'nested decision example' to see examples or 'main menu' to return to the main menu."
+                        ),
+                        "example": (
+                            "Example of nested decision:\n"
+                            "x = 10\n"
+                            "if x > 5:\n"
+                            "    if x < 15:\n"
+                            "        print('x is between 5 and 15')\n"
+                            "    else:\n"
+                            "        print('x is 15 or more')\n"
+                            "else:\n"
+                            "    print('x is 5 or less')\n"
+                            "Output:\nx is between 5 and 15"
+                            "Type 'exit' to exit the program or 'main menu' to return to this menu!"
+                        ),
+                    },
+                },
+            },
+            "semis": {
+                "description": "Here are the available topics in the Semi-Final Term:",
+                "topics": {
+                    "loops": {
+                        "description": (
+                            "Loops allow you to execute a block of code multiple times.\n"
+                            "Type 'loops example' to see examples or 'main menu' to return to the main menu."
+                        ),
+                        "example": (
+                            "Example of a loop:\n"
+                            "for i in range(3):\n"
+                            "    print(i)\n"
+                            "Output:\n0\n1\n2\n"
+                            "Type 'exit' to exit the program or 'main menu' to return to this menu!"
+                        ),
+                    },
+                    "functions": {
+                        "description": (
+                            "Functions are reusable blocks of code that perform a specific task.\n"
+                            "Type 'functions example' to see examples or 'main menu' to return to the main menu."
+                        ),
+                        "example": (
+                            "Example of a function:\n"
+                            "def greet(name):\n"
+                            "    return f'Hello, {name}!'\n"
+                            "print(greet('Alice'))\n"
+                            "Output:\nHello, Alice!\n"
+                            "Type 'exit' to exit the program or 'main menu' to return to this menu!"
+                        ),
+                    },
+                },
+            },
+            "finals": {
+                "description": "Here are the available topics in the Final Term:",
+                "topics": {
+                    "classes and objects": {
+                        "description": (
+                            "Classes and objects are the foundation of object-oriented programming.\n"
+                            "Type 'classes and objects example' to see examples or 'main menu' to return to the main menu."
+                        ),
+                        "example": (
+                            "Example of a class and object:\n"
+                            "class Person:\n"
+                            "    def __init__(self, name, age):\n"
+                            "        self.name = name\n"
+                            "        self.age = age\n\n"
+                            "    def greet(self):\n"
+                            "        return f'Hi, I am {self.name}, and I am {self.age} years old.'\n\n"
+                            "person = Person('Alice', 25)\n"
+                            "print(person.greet())\n"
+                            "Output:\nHi, I am Alice, and I am 25 years old.\n"
+                            "Type 'exit' to exit the program or 'main menu' to return to this menu!"
+                        ),
+                    },
+                },
+            },
             "exit": "Goodbye! Have a great day.",
         }
         self.fallback_message = "I'm sorry, I don't understand that. Can you try asking something else?"
 
     def clear_screen(self):
-        """Clear the terminal screen."""
-        os.system('cls' if os.name == 'nt' else 'clear')
+        os.system("cls" if os.name == "nt" else "clear")
 
     def get_best_match(self, user_input, choices):
-        """Find the best match for user input from available choices."""
         match = process.extractOne(user_input, choices)
         return match if match and match[1] >= 60 else None
 
+    def get_topic_response(self, section_key):
+        """Handle sections with nested topics like Prelims, Midterms, Semis, and Finals."""
+        section_details = self.responses.get(section_key, {})
+        description = section_details.get("description", "No description available.")
+        topics = section_details.get("topics", {})
+        if topics:
+            topic_list = "\n".join(f"- {topic}" for topic in topics.keys())
+            return f"{description}\n{topic_list}"
+        return f"{description}\n(No topics available.)"
+
     def get_response(self, user_input):
-        """Fetch response based on user input."""
         user_input = user_input.lower().strip()
 
-        # Check for matches with main responses
+        # Return to the main menu
+        if user_input == "main menu":
+            return self.responses["hello"]["description"]
+
         match = self.get_best_match(user_input, self.responses.keys())
         if match:
             match_key = match[0]
-            response = self.responses.get(match_key)
+            if match_key in {"prelims", "midterms", "semis", "finals"}:
+                return self.get_topic_response(match_key)
+            return self.responses[match_key]
 
-            # Handle nested Prelims
-            if match_key == "prelims":
-                prelim_details = response
-                description = prelim_details["description"]
-                topics = "\n".join(f"- {topic}" for topic in prelim_details["topics"].keys())
-                return f"{description}\n{topics}"
+        # Check for subtopics and examples in all sections
+        for section in ["prelims", "midterms", "semis", "finals"]:
+            topics = self.responses[section]["topics"]
+            match = self.get_best_match(user_input, topics.keys())
+            if match:
+                topic_key = match[0]
+                if "example" in user_input:
+                    return topics[topic_key].get("example", "No example available.")
+                return topics[topic_key].get("description", "")
 
-            return response
-
-        # Check for subtopics under Prelims
-        prelim_topics = self.responses["prelims"]["topics"]
-        match = self.get_best_match(user_input, prelim_topics.keys())
-        if match:
-            match_key = match[0]
-            return prelim_topics[match_key]
-
-        # Fallback response
         return self.fallback_message
 
     def run(self):
-        """Run the chatbot interaction loop."""
-        print("Chatbot: Hello! Type 'help' to see what I can do. Type 'exit' to quit.")
+        print("Chatbot:", self.responses["hello"]["description"])
         while True:
             user_input = input("\nYou: ").strip()
-            self.clear_screen()  # Clear the screen
+            self.clear_screen()
             if user_input.lower() == "exit":
                 print("Chatbot:", self.responses["exit"])
                 break
