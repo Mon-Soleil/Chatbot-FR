@@ -107,6 +107,23 @@ class Chatbot:
                             "Type 'exit' to exit the program or 'main menu' to return to this menu!"
                         ),
                     },
+                    "lists":{
+                        "description":{
+                            "It is used to declare items in a list, you can add, remove and change items in the list.\n"
+                            "It uses brackets or []\n\n"
+                            "Type 'lists example' to see examples or 'main menu' to return to the main menu."
+                        },
+                        "example":{
+                            "list = ['apple', 'banana']\n"
+                            "print(list)\n\n"
+                            "Output:\n"
+                            "['apple', 'banana']"
+                        },
+                    },
+                    "Dictionaries":{
+                        "Dictionaries is a key-value pairs, which you use the key to find the values"
+                        "Dictionaries also known as 'dict' uses curly brackets or {}"
+                    },
                     "functions": {
                         "description": (
                             "Functions are reusable blocks of code that perform a specific task.\n"
