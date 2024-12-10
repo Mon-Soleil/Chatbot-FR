@@ -124,7 +124,7 @@ class Chatbot:
                         "description": (
                             "Dictionaries store key-value pairs, and you use the key to find the corresponding value.\n"
                             "Dictionaries are also known as 'dict' and use curly brackets { }\n\n"
-                            "Type 'dict example' to see examples or 'main menu' to return to this menu."
+                            "Type 'dictionaries example' to see examples or 'main menu' to return to this menu."
                         ),
                         "example": (
                             "Example of a dictionary:\n"
