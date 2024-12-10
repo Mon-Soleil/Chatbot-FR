@@ -1,7 +1,6 @@
 import os
 from rapidfuzz import process
 
-
 class Chatbot:
     def __init__(self):
         self.responses = {
@@ -51,7 +50,7 @@ class Chatbot:
                 },
             },
             "midterms": {
-                "description": "Here are the available topics in the Midterms:",
+                "description": "Here are the available topics in the Midterms Term:",
                 "topics": {
                     "if else statement": {
                         "description": (
@@ -66,7 +65,7 @@ class Chatbot:
                             "    print('y is greater than x')\n"
                             "else:\n"
                             "    print('x is greater than y')\n"
-                            "Output:\ny is greater than x"
+                            "Output:\ny is greater than x\n"
                             "Type 'exit' to exit the program or 'main menu' to return to this menu!"
                         ),
                     },
@@ -85,7 +84,7 @@ class Chatbot:
                             "        print('x is 15 or more')\n"
                             "else:\n"
                             "    print('x is 5 or less')\n"
-                            "Output:\nx is between 5 and 15"
+                            "Output:\nx is between 5 and 15\n\n"
                             "Type 'exit' to exit the program or 'main menu' to return to this menu!"
                         ),
                     },
@@ -107,22 +106,37 @@ class Chatbot:
                             "Type 'exit' to exit the program or 'main menu' to return to this menu!"
                         ),
                     },
-                    "lists":{
-                        "description":{
-                            "It is used to declare items in a list, you can add, remove and change items in the list.\n"
-                            "It uses brackets or []\n\n"
+                    "lists": {
+                        "description": (
+                            "Lists are used to declare items, and you can add, remove, and change items in the list.\n"
+                            "It uses brackets or [ ]\n\n"
                             "Type 'lists example' to see examples or 'main menu' to return to the main menu."
-                        },
-                        "example":{
+                        ),
+                        "example": (
+                            "Example of a list:\n"
                             "list = ['apple', 'banana']\n"
                             "print(list)\n\n"
-                            "Output:\n"
-                            "['apple', 'banana']"
-                        },
+                            "Output:\n['apple', 'banana']\n"
+                            "Type 'exit' to exit the program or 'main menu' to return to this menu!"
+                        ),
                     },
-                    "Dictionaries":{
-                        "Dictionaries is a key-value pairs, which you use the key to find the values"
-                        "Dictionaries also known as 'dict' uses curly brackets or {}"
+                    "dictionaries": {
+                        "description": (
+                            "Dictionaries store key-value pairs, and you use the key to find the corresponding value.\n"
+                            "Dictionaries are also known as 'dict' and use curly brackets { }\n\n"
+                            "Type 'dict example' to see examples or 'main menu' to return to this menu."
+                        ),
+                        "example": (
+                            "Example of a dictionary:\n"
+                            "student = {\n"
+                            "    'name': 'Anna',\n"
+                            "    'age': 21,\n"
+                            "    'favorite_color': 'Blue'\n"
+                            "}\n"
+                            "print(student)\n\n"
+                            "Output:\n{'name': 'Anna', 'age': 21, 'favorite_color': 'Blue'}\n"
+                            "Type 'exit' to exit the program or 'main menu' to return to this menu!"
+                        ),
                     },
                     "functions": {
                         "description": (
@@ -146,7 +160,7 @@ class Chatbot:
                     "classes and objects": {
                         "description": (
                             "Classes and objects are the foundation of object-oriented programming.\n"
-                            "Type 'classes and objects example' to see examples or 'main menu' to return to the main menu."
+                            "Type 'classes and objects example' to see examples or 'main menu' to return to this menu."
                         ),
                         "example": (
                             "Example of a class and object:\n"
@@ -173,7 +187,46 @@ class Chatbot:
 
     def get_best_match(self, user_input, choices):
         match = process.extractOne(user_input, choices)
-        return match if match and match[1] >= 60 else None
+        if match and match[1] >= 60:
+            return match[0]
+        return None
+
+    def get_response(self, user_input):
+        user_input = user_input.lower().strip()
+
+        # Handle returning to the main menu
+        if user_input == "main menu":
+            return self.responses["hello"]["description"]
+
+        # Handle "example" queries correctly
+        if "example" in user_input:
+            # Check all sections and topics for 'example' and match the term
+            for section_key in self.responses.keys():
+                if section_key in ["prelims", "midterms", "semis", "finals"]:
+                    topics = self.responses[section_key].get("topics", {})
+                    for topic_key, topic_data in topics.items():
+                        if topic_key in user_input:
+                            return topic_data.get("example", self.fallback_message)
+
+        # Try to match with the main sections like prelims, midterms, etc.
+        match = self.get_best_match(user_input, self.responses.keys())
+        if match:
+            match_key = match
+            if match_key in {"prelims", "midterms", "semis", "finals"}:
+                return self.get_topic_response(match_key)
+            return self.responses[match_key]["description"]
+
+        # Check for subtopics and examples in all sections
+        for section in ["prelims", "midterms", "semis", "finals"]:
+            topics = self.responses[section].get("topics", {})
+            match = self.get_best_match(user_input, topics.keys())
+            if match:
+                topic_key = match
+                if "example" in user_input:
+                    return topics[topic_key].get("example", "No example available.")
+                return topics[topic_key].get("description", "")
+
+        return self.fallback_message
 
     def get_topic_response(self, section_key):
         """Handle sections with nested topics like Prelims, Midterms, Semis, and Finals."""
@@ -184,32 +237,6 @@ class Chatbot:
             topic_list = "\n".join(f"- {topic}" for topic in topics.keys())
             return f"{description}\n{topic_list}"
         return f"{description}\n(No topics available.)"
-
-    def get_response(self, user_input):
-        user_input = user_input.lower().strip()
-
-        # Return to the main menu
-        if user_input == "main menu":
-            return self.responses["hello"]["description"]
-
-        match = self.get_best_match(user_input, self.responses.keys())
-        if match:
-            match_key = match[0]
-            if match_key in {"prelims", "midterms", "semis", "finals"}:
-                return self.get_topic_response(match_key)
-            return self.responses[match_key]
-
-        # Check for subtopics and examples in all sections
-        for section in ["prelims", "midterms", "semis", "finals"]:
-            topics = self.responses[section]["topics"]
-            match = self.get_best_match(user_input, topics.keys())
-            if match:
-                topic_key = match[0]
-                if "example" in user_input:
-                    return topics[topic_key].get("example", "No example available.")
-                return topics[topic_key].get("description", "")
-
-        return self.fallback_message
 
     def run(self):
         print("Chatbot:", self.responses["hello"]["description"])
@@ -225,5 +252,10 @@ class Chatbot:
 
 # Run the chatbot
 if __name__ == "__main__":
-    bot = Chatbot()
-    bot.run()
+    try:
+        bot = Chatbot()
+        bot.run()
+    except KeyboardInterrupt:
+        print("\nChatbot: Program interrupted. Goodbye!")
+    except Exception as e:
+        print(f"Chatbot encountered an error: {e}")
